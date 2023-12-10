@@ -9,6 +9,8 @@ AddSwaggerServices(builder);
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 AddStoreContext(builder); 
 var app = builder.Build();
@@ -17,6 +19,8 @@ if (app.Environment.IsDevelopment())
 {
     ConfigureSwagger(app);
 }
+
+app.UseStaticFiles();
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
