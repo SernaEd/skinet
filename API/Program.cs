@@ -1,3 +1,4 @@
+using Core.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,12 +8,28 @@ builder.Services.AddControllers();
 AddSwaggerServices(builder);
 builder.Services.AddEndpointsApiExplorer();
 
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+
 AddStoreContext(builder); 
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
     ConfigureSwagger(app);
+}
+
+using var scope = app.Services.CreateScope();
+var services = scope.ServiceProvider;
+var context = services.GetRequiredService<StoreContext>();
+var logger = services.GetRequiredService<ILogger<Program>>();
+try
+{
+    await context.Database.MigrateAsync();
+    await StoreContextSeed.SeedAsync(context);
+}
+catch (Exception ex)
+{
+    logger.LogError(ex, "An error occurred during migration");
 }
 
 app.UseAuthorization();
