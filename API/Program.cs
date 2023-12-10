@@ -1,19 +1,18 @@
-using Core.Interfaces;
+using API.Extensions;
+using API.Middleware;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
-AddSwaggerServices(builder);
-builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddApplicationServices(builder.Configuration);
 
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-AddStoreContext(builder); 
 var app = builder.Build();
+
+app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseStatusCodePagesWithReExecute("/errors/{0}");
 
 if (app.Environment.IsDevelopment())
 {
@@ -40,17 +39,6 @@ app.UseAuthorization();
 app.MapControllers();
 app.Run();
 return;
-
-void AddStoreContext(WebApplicationBuilder webAppBuilder)
-{
-    var connectionString = webAppBuilder.Configuration.GetConnectionString("DefaultConnection");
-    webAppBuilder.Services.AddDbContext<StoreContext>(options => options.UseSqlite(connectionString));
-}
-
-void AddSwaggerServices(IHostApplicationBuilder webApplicationBuilder)
-{
-    webApplicationBuilder.Services.AddSwaggerGen();
-}
 
 void ConfigureSwagger(IApplicationBuilder application)
 {
