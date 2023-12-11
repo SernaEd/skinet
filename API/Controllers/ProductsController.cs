@@ -1,5 +1,6 @@
 ﻿using API.DTOs;
 using API.Errors;
+using API.Helpers;
 using AutoMapper;
 using Core.Entities;
 using Core.Interfaces;
@@ -27,22 +28,20 @@ public class ProductsController : BaseApiController
     }
 
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<ProductToReturnDto>>> GetProducts()
+    public async Task<ActionResult<Pagination<ProductToReturnDto>>> GetProducts([FromQuery]ProductSpecParams parameters)
     {
-        try
-        {
-            var spec = new ProductsWithTypesAndBrandsSpecification();
-            
-            var products = await _productRepository.ListAsync(spec);
-            
-            var productsToReturnDto = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products);
-            
-            return Ok(productsToReturnDto);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Internal server error, {ex}");
-        }
+        var spec = new ProductsWithTypesAndBrandsSpecification(parameters);
+        var countSpec = new ProductWithFiltersForCountSpecification(parameters);
+        
+        var totalItems = await _productRepository.CountAsync(countSpec);
+        
+        var products = await _productRepository.ListAsync(spec);
+        
+        var productsToReturnDto = _mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductToReturnDto>>(products);
+        
+        var productsPaginated = new Pagination<ProductToReturnDto>(parameters.PageIndex, parameters.PageSize, totalItems, productsToReturnDto);
+        
+        return Ok(productsPaginated);
     }
     
     [HttpGet("{id}")]

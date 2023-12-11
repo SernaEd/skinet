@@ -12,18 +12,11 @@ public class SpecificationEvaluator<TEntity> where TEntity : BaseEntity
         
         query = specification.Criteria != null ? query.Where(specification.Criteria) : query;
         
-        // if (specification.OrderBy != null)
-        // {
-        //     query = query.OrderBy(specification.OrderBy);
-        // }
-        // if (specification.OrderByDescending != null)
-        // {
-        //     query = query.OrderByDescending(specification.OrderByDescending);
-        // }
-        // if (specification.IsPagingEnabled)
-        // {
-        //     query = query.Skip(specification.Skip).Take(specification.Take);
-        // }
+        query = specification.OrderBy != null ? query.OrderBy(specification.OrderBy) : query;
+        
+        query = specification.OrderByDescending != null ? query.OrderByDescending(specification.OrderByDescending) : query;
+        
+        query = specification.IsPagingEnabled ? query.Skip(specification.Skip).Take(specification.Take) : query;
         
         query = specification.Includes.Aggregate(query, (current, include) => current.Include(include));
         return query;

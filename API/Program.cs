@@ -21,6 +21,11 @@ if (app.Environment.IsDevelopment())
 
 app.UseStaticFiles();
 
+app.UseCors("CorsPolicy");
+
+app.UseAuthorization();
+app.MapControllers();
+
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 var context = services.GetRequiredService<StoreContext>();
@@ -35,8 +40,6 @@ catch (Exception ex)
     logger.LogError(ex, "An error occurred during migration");
 }
 
-app.UseAuthorization();
-app.MapControllers();
 app.Run();
 return;
 
