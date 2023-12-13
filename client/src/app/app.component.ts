@@ -1,33 +1,24 @@
 import {Component, OnInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
-import {NavBarComponent} from "./nav-bar/nav-bar.component";
-import {HttpClient, HttpClientModule} from "@angular/common/http";
-import {Product} from "./models/product";
-import {Pagination} from "./models/pagination";
+import {CoreModule} from "./core/core.module";
+import {HttpClientModule} from "@angular/common/http";
+import {ShopModule} from "./shop/shop.module";
+
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [CommonModule, RouterOutlet, NavBarComponent, HttpClientModule],
+    imports: [CommonModule, RouterOutlet, CoreModule, ShopModule, HttpClientModule],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit{
     title = 'Skinet';
-    products: Product[] = [];
 
-    constructor(private http: HttpClient) {}
+    constructor() {}
 
     ngOnInit() {
-        this.http.get<Pagination<Product[]>>('https://localhost:5001/api/products?pageSize=50')
-            .subscribe({
-                next: (res: any) => this.products = res.data,
-                error: err => console.log(err),
-                complete: () => {
-                    console.log('Completed');
-                }
-            })
     }
 
 }
