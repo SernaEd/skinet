@@ -5,12 +5,18 @@ import {Pagination} from "../shared/models/pagination";
 import {Brand} from "../shared/models/brand";
 import {Type} from "../shared/models/type";
 import {ShopParams} from "../shared/models/shopParams";
+import {PagingHeaderComponent} from "./paging-header/paging-header.component";
+import {ProductItemComponent} from "./product-item/product-item.component";
+import {PagerComponent} from "../shared/pager/pager.component";
+import {NgForOf, NgIf} from "@angular/common";
 
 @Component({
     selector: 'app-shop',
     templateUrl: './shop.component.html',
     styleUrl: './shop.component.scss',
-    standalone: false,
+    standalone: true,
+    imports: [PagingHeaderComponent, ProductItemComponent, PagerComponent, NgForOf, NgIf],
+    providers: [ShopService]
 })
 export class ShopComponent implements OnInit{
     @ViewChild('search', {static: false}) searchTerm?: ElementRef;

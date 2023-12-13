@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import {HttpClient, HttpParams} from "@angular/common/http";
 import {Pagination} from "../shared/models/pagination";
 import {Product} from "../shared/models/product";
-import {ShopModule} from "./shop.module";
 import {Brand} from "../shared/models/brand";
 import {Type} from "../shared/models/type";
 import {ShopParams} from "../shared/models/shopParams";
+import {ShopComponent} from "./shop.component";
 
 @Injectable({
-    providedIn: ShopModule
+    providedIn: ShopComponent
 })
 export class ShopService {
     baseUrl = 'https://localhost:5001/api/';
@@ -34,5 +34,9 @@ export class ShopService {
 
     getTypes() {
         return this.http.get<Type[]>(this.baseUrl + 'products/types');
+    }
+
+    getProduct(id: number) {
+        return this.http.get<Product>(this.baseUrl + 'products/' + id);
     }
 }
