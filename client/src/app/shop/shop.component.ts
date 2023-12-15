@@ -49,9 +49,6 @@ export class ShopComponent implements OnInit{
                     this.totalCount = res.count;
                 },
                 error: err => console.log(err),
-                complete: () => {
-                    console.log('Got products');
-                }
             })
     }
 
@@ -60,9 +57,6 @@ export class ShopComponent implements OnInit{
             .subscribe({
                 next: (res: Brand[]) => this.brands = [{id: 0, name: 'All'}, ...res],
                 error: err => console.log(err),
-                complete: () => {
-                    console.log('Got brands');
-                }
             })
     }
 
@@ -71,9 +65,6 @@ export class ShopComponent implements OnInit{
             .subscribe({
                 next: (res: Type[]) => this.types = [{id: 0, name: 'All'}, ...res],
                 error: err => console.log(err),
-                complete: () => {
-                    console.log('Got types');
-                }
             })
     }
 

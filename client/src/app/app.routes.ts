@@ -4,7 +4,7 @@ import {NotFoundComponent} from "./core/not-found/not-found.component";
 import {ServerErrorComponent} from "./core/server-error/server-error.component";
 
 export const routes: Route[] = [
-    {path: '', loadComponent: () => import('./home/home.component').then(mod => mod.HomeComponent)},
+    {path: '', loadComponent: () => import('./home/home.component').then(mod => mod.HomeComponent), data: {breadcrumb: 'Home'}},
     {path: 'test-error', component: TestErrorComponent},
     {path: 'not-found', component: NotFoundComponent},
     {path: 'server-error', component: ServerErrorComponent},

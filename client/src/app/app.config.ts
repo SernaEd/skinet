@@ -6,6 +6,7 @@ import {HTTP_INTERCEPTORS, provideHttpClient, withFetch} from "@angular/common/h
 import {ErrorInterceptor} from "./core/interceptors/error.interceptor";
 import {provideAnimations} from "@angular/platform-browser/animations";
 import {provideToastr} from "ngx-toastr";
+import {LoadingInterceptor} from "./core/interceptors/loading.interceptor";
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -13,6 +14,7 @@ export const appConfig: ApplicationConfig = {
         provideClientHydration(),
         provideHttpClient(withFetch()),
         {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
+        {provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true},
         provideAnimations(),
         provideToastr(),
     ]
